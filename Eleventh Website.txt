@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+       /* Set the size of the div element that contains the map */
+      #map {
+        height: 450px;  /* The height is 450 pixels */
+        width: 100%;  /* The width is the width of the web page */
+       }
+    </style>
+  </head>
+  <body>
+    <h3 style="color:purple; font-family:verdana; font-size:250%; text-align:center; margin: 20px">SafetyWatch</h3>
+    
+    <button type="button">Click Me!</button>
+
+    <!--The div element for the map -->
+    <div id="map"></div>
+
+    <script>
+
+
+
+// Initialize and add the map
+function initMap() {
+  // The location of Chicago
+  var chicago = {lat: 41.8837338, lng: -87.6288585};
+  // The map, centered at Chicago
+  var map = new google.maps.Map(document.getElementById('map'), {zoom: 13, center: chicago});
+
+  var content = 'Robbery';
+  var time = '7:05';
+  addMarker(41.864360, -87.621789, map, content, time);
+}
+
+function addMarker(lati, longi, map, content, time){
+  var pos = {lat: lati, lng: longi};
+
+  var infowindow = new google.maps.InfoWindow({
+    content: '<b>Time: </b>' + time + '<br><b>Description: </b>' + content
+  });
+  
+  var marker = new google.maps.Marker({
+    position: pos,
+    icon: {
+      path: google.maps.SymbolPath.CIRCLE,
+      scale: 8,
+      strokeColor: 'black',
+      strokeWeight: 3,
+      fillColor: 'white',
+      fillOpacity: 0.8,
+    },
+    map: map,
+  });
+
+  marker.addListener('click', function() { infowindow.open(map,marker);});
+}
+
+    </script>
+
+
+    <!--Load the API from the specified URL
+    * The async attribute allows the browser to render the page while the API loads
+    * The key parameter will contain your own API key (which is not needed for this tutorial)
+    * The callback parameter executes the initMap() function
+    -->
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCGqnpW4CyuwTKKP2rRO6SROCLA0oDxHH8&callback=initMap">
+    </script>
+  </body>
+</html>
