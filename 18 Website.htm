@@ -74,17 +74,17 @@
   <body>
     <h3 style="color:purple; font-family:verdana; font-size:250%; text-align:center; margin: 20px; display: inline-table;">SafetyWatch</h3>
     
-	<button class="open-button" onclick="openForm()" id = "button" style = "font-family:verdana;">Report Crime</button>
+	<button class="open-button" onclick="openForm()" id = "button">Report Crime</button>
 		
 	<div class="form-popup" id="myForm">
-		<form action ="javascript:reportFromBrowser(document.getElementById('loc').value,document.getElementById('desc').value)" class="form-container" style = "font-family:verdana;"> 
+		<form action ="javascript:reportFromBrowser(document.getElementById('loc').value,document.getElementById('desc').value)" class="form-container">
 		<h1>Report a Crime</h1>
 		
-		<label for="loc" style = "font-family:verdana;"><b>Location</b></label>
-		<input type="text" placeholder="Enter Location" name="loc" id="loc" style = "font-family:verdana;" required>
+		<label for="loc"><b>Location</b></label>
+		<input type="text" placeholder="Enter Location" name="loc" id="loc" required>
 		
-		<label for="desc" style = "font-family:verdana;"><b>Description</b></label>
-		<input type="text" placeholder="Enter Description" name="desc" id="desc" style = "font-family:verdana;" required>
+		<label for="desc"><b>Description</b></label>
+		<input type="text" placeholder="Enter Description" name="desc" id="desc" required>
 		
 		<button type="submit" class="btn">Report</button>
 		<button type="button" class="btn cancel" onclick ="closeForm()">Close</button>
