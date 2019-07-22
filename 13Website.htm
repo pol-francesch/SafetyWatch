@@ -1,0 +1,160 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+       /* Set the size of the div element that contains the map */
+      #map {
+        height: 450px;  /* The height is 450 pixels */
+        width: 100%;  /* The width is the width of the web page */
+       }
+      #button {
+  	    background-color: #f44336; /* Red */
+  	    border: none;
+  	    color: white;
+  	    padding: 15px 32px;
+  	    text-align: center;
+  	    text-decoration: none;
+  	    display: inline-block;
+ 	    font-size: 20px;
+	    border-radius: 8px;
+	    float: right;
+		cursor: pointer;
+		}
+	  .form-popup {
+	    display: none;
+		position: fixed;
+		bottom: 0;
+		right: 15px;
+		border: 3px solid #f1f1f1;
+		z-index: 9;
+	   }
+	   
+	   .form-container {
+		max-width: 300px;
+		padding: 10px;
+		background-color: white;
+	   }
+	   
+	   .form-container input[type=text], .form-container input[type=text]{
+		width: 90%;
+		padding: 15px;
+		margin: 5px 0 22px 0;
+		border:none;
+		background: #f1f1f1;
+	   }
+	   
+	   .form-container input[type=text]:focus, .form-container input[type=text]:focus {
+		background-color: #ddd;
+		outline: none;
+	   }
+	   
+	   .form-container .btn {
+		background-color: #4CAF50;
+		color: white;
+		padding: 16px 20px;
+		border: none;
+		cursor: pointer;
+		width: 100%;
+		margin-bottom:10px;
+		opacity: 0.8;
+	   }
+	   
+	   .form-container .cancel {
+		background-color: red;
+	   }
+	   
+	   .form-container .btn:hover, .open-button:hover{
+		opacity: 1;
+	   }
+	   
+    </style>
+  </head>
+  <body>
+    <h3 style="color:purple; font-family:verdana; font-size:250%; text-align:center; margin: 20px">SafetyWatch</h3>
+    
+	<button class="open-button" onclick="openForm()" id = "button">Report Crime</button>
+		
+	<div class="form-popup" id="myForm">
+		<form action ="javascript:reportFromBrowser(41.864360, -86.621789,document.getElementById('desc').value)" class="form-container">
+		<h1>Report a Crime</h1>
+		
+		<label for="loc"><b>Location</b></label>
+		<input type="text" placeholder="Enter Location" name="loc" id="loc" required>
+		
+		<label for="desc"><b>Description</b></label>
+		<input type="text" placeholder="Enter Description" name="desc" id="desc" required>
+		
+		<button type="submit" class="btn">Report</button>
+		<button type="button" class="btn cancel" onclick ="closeForm()">Close</button>
+		</form>
+	</div>
+	
+	<script>
+	function openForm() {
+		document.getElementById("myForm").style.display = "block";
+	}
+	
+	function closeForm() {
+		document.getElementById("myForm").style.display = "none";
+	}
+	function reportFromBrowser(lati, longi, content){
+		closeForm();
+		addMarker(lati, longi, map, content, getLocalTime());
+	}
+	function getLocalTime(){
+		var time = new Date();
+		var local= time.getHours() + ":" + time.getMinutes();
+		return local;
+	}
+	</script>
+	
+    <!--The div element for the map -->
+    <div id="map"></div>
+
+    <script>
+	// Initialize and add the map
+	var map;
+	function initMap() {
+		// The location of Chicago
+		var chicago = {lat: 41.8837338, lng: -87.6288585};
+		// The map, centered at Chicago
+		map = new google.maps.Map(document.getElementById('map'), {zoom: 13, center: chicago});
+
+		var content = 'Robbery';
+		var time = '7:05';
+		//addMarker(41.864360, -87.621789, map, content, time);
+	}
+
+	function addMarker(lati, longi, map, content, time){
+		var pos = {lat: lati, lng: longi};
+
+		var infowindow = new google.maps.InfoWindow({
+			content: '<b>Time: </b>' + time + '<br><b>Description: </b>' + content
+		});
+  
+		var marker = new google.maps.Marker({
+				position: pos,
+				icon: {
+					path: google.maps.SymbolPath.CIRCLE,
+					scale: 8,
+					strokeColor: 'black',
+					strokeWeight: 3,
+					fillColor: 'white',
+					fillOpacity: 0.8,
+				},
+				map : map
+			});
+
+		marker.addListener('click', function() { infowindow.open(map,marker);});
+	}
+    </script>
+	
+    <!--Load the API from the specified URL
+    * The async attribute allows the browser to render the page while the API loads
+    * The key parameter will contain your own API key (which is not needed for this tutorial)
+    * The callback parameter executes the initMap() function -->
+    <script async defer
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCGqnpW4CyuwTKKP2rRO6SROCLA0oDxHH8&callback=initMap">
+    </script>
+  </body>
+</html>
