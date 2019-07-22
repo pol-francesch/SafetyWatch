@@ -103,7 +103,7 @@
 	}
 	function getLocalTime(){
 		var time = new Date();
-		var local= time.getHours() + ":" + time.getMinutes();
+		var local= (time.getHours()<10?'0':'')+ time.getHours() + ":" + (time.getMinutes()<10?'0':'') + time.getMinutes();
 		return local;
 	}
 	</script>
