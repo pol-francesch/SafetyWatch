@@ -159,13 +159,13 @@
 	</div>
 		
 	<div class="form-popup" id="myForm">
-		<form action ="javascript:reportFromBrowser(document.getElementById('loc').value,document.getElementById('desc').value)" class="form-container" style = "font-family:verdana;">
+		<form action ="javascript:reportFromBrowser(document.getElementById('loc').value,document.getElementById('desc').value)" class="form-container" id = "label" style = "font-family:verdana;">
 		<h1>Report a Crime</h1>
 		
-		<label for="loc" style = "font-family:verdana;"><b>Location</b></label>
+		<label for="loc" style = "font-family:verdana;" id = "label"><b>Location</b></label>
 		<input type="text" placeholder="Enter Location" name="loc" id="loc" style = "font-family:verdana;" required>
 		
-		<label for="desc" style = "font-family:verdana;"><b>Description</b></label>
+		<label for="desc" style = "font-family:verdana;" id = "label"><b>Description</b></label>
 		<input type="text" placeholder="Enter Description" name="desc" id="desc" style = "font-family:verdana;" required>
 		
 		<button type="submit" class="btn" style = "font-family:verdana;">Report</button>
@@ -211,13 +211,18 @@
 		map.setMapTypeId('roadmap');
 		document.body.style.backgroundColor = "white";
 		document.getElementById("image").src = "day2.png";
+		document.getElementsByClassName("form-container")[0].style.backgroundColor = "#f1f1f1";
+		document.getElementsByClassName("form-popup")[0].style.border = "3px solid #f1f1f1";
+		document.getElementById("label").style.color = "black";
 	}
 
 	function nightMode(){
 		map.setMapTypeId('night_mode');
 		document.body.style.backgroundColor = "#242f3e";
 		document.getElementById("image").src = "night2.png";
-		//document.getElementById("form-container").style.background-color.val("#242f3e");
+		document.getElementsByClassName("form-container")[0].style.backgroundColor = "#242f3e";
+		document.getElementsByClassName("form-popup")[0].style.border = "3px solid #000000";
+		document.getElementById("label").style.color = "white";
 	}
 
 	</script>
