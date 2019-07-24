@@ -186,6 +186,26 @@
 		var geocoder = new google.maps.Geocoder();
 		geocoder.geocode({'address': address}, function(results, status) {
           		if (status === 'OK') {
+				var params = {
+					TableName: "safetyWatchLog",
+					Item: {
+						"crimeType": content,
+						"time": getLocalTime(),
+						"latitude": results[0].geometry.location.lat(),
+						"accuracy": "????",
+						"longitude": results[0].geometry.location.lng()
+					}
+				};
+				var API_GATE = 'https://fcoto8jt9f.execute-api.us-east-1.amazonaws.com/in/hack';
+				$.ajax({
+					type: 'POST',
+					url: API_GATE,
+					data: JSON.stringify(params),
+					contentType: "application/json",
+						success: function (data) {
+							location.reload();
+						}
+				});
 				//ADD TO DATA BASE
 				// LAMBDA TO AUTOREFRESH
            			addMarker(results[0].geometry.location.lat(), results[0].geometry.location.lng(), map, content, getLocalTime());
@@ -365,7 +385,7 @@
 		//$('#map').html('');
 		//alert(data.Items);
 		data.Items.forEach(function(testtableItem){
-			//alert(parseFloat(testtableItem.latitude));
+			//alert(typeof(testtableItem.latitude));
 			addMarker(parseFloat(testtableItem.latitude), parseFloat(testtableItem.longitude), map , testtableItem.crimeType, testtableItem.time);
 		});
 	}
