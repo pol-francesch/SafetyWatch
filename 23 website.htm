@@ -1,0 +1,406 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+       /* Set the size of the div element that contains the map */
+      #map {
+        height: 450px;  /* The height is 450 pixels */
+        width: 100%;  /* The width is the width of the web page */
+       }
+      #button {
+  	    background-color: #f44336; /* Red */
+  	    border: none;
+  	    color: white;
+  	    padding: 12px 32px;
+  	    text-align: center;
+  	    text-decoration: none;
+  	    display: inline-block;
+ 	    font-size: 16px;
+	    border-radius: 8px;
+	    float: right;
+		cursor: pointer;
+		margin-top: 20px;
+		margin-bottom: 25px;
+		font-family:verdana;
+		}
+		
+	  .form-popup {
+	    display: none;
+		position: fixed;
+		bottom: 84px;
+		right: 15px;
+		border: 3px solid #f1f1f1;
+		z-index: 9;
+	   }
+	   
+	   .form-container {
+		max-width: 300px;
+		padding: 10px;
+		background-color: white;
+	   }
+	   
+	   .form-container input[type=text], .form-container input[type=text]{
+		width: 90%;
+		padding: 15px;
+		margin: 5px 0 22px 0;
+		border:none;
+		background: #f1f1f1;
+	   }
+	   
+	   .form-container input[type=text]:focus, .form-container input[type=text]:focus {
+		background-color: #ddd;
+		outline: none;
+	   }
+	   
+	   .form-container .btn {
+		background-color: #4CAF50;
+		color: white;
+		padding: 16px 20px;
+		border: none;
+		cursor: pointer;
+		width: 100%;
+		margin-bottom:10px;
+		opacity: 0.8;
+	   }
+	   
+	   .form-container .cancel {
+		background-color: red;
+	   }
+	   
+	   .form-container .btn:hover, .open-button:hover{
+		opacity: 1;
+	   }
+	   
+		.switch {
+			position: absolute;
+			top: 50px;
+			display: inline-block;
+			width: 50px;
+			height: 25px;
+		}
+
+		/* Hide default HTML checkbox */
+			.switch input {
+			opacity: 0;
+			width: 0;
+			height: 0;
+		}
+
+		/* The slider */
+		.slider {
+			position: absolute;
+			cursor: pointer;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: #ccc;
+			-webkit-transition: .4s;
+			transition: .4s;
+			display:inline-block;
+			margin-top: 0px;
+		}
+
+		.slider:before {
+			position: absolute;
+			content: "";
+			height: 18px;
+			width: 18px;
+			left: 4px;
+			bottom: 4px;
+			background-color: white;
+			-webkit-transition: .4s;
+			transition: .4s;
+		}
+
+		input:checked + .slider {
+			background-color: #2196F3;
+		}
+
+		input:focus + .slider {
+			box-shadow: 0 0 1px #2196F3;
+		}
+
+		input:checked + .slider:before {
+			-webkit-transform: translateX(23px);
+			-ms-transform: translateX(23px);
+			transform: translateX(23px);
+		}
+
+		/* Rounded sliders */
+			.slider.round {
+			border-radius: 25px;
+		}
+
+		.slider.round:before {
+			border-radius: 50%;
+		}
+		
+		#rows {
+			display: flex;
+			flex-direction: row;
+			width: 100%;
+		}
+		#spacer {
+			flex: 1;
+		}
+    </style>
+  </head>
+  <body>    
+	<div id = "rows">
+		<label class="switch">
+			<input type = "checkbox" id = "mode" onchange = "themeChange()">
+			<span class = "slider round"></span>
+		</label>
+		<span id = "spacer"></span>
+		<img src="day2.png" alt = "Logo" width = "137" height = "102" style = "padding:3px;" id = "image">
+		<span id = "spacer"></span>
+		<button class="open-button" onclick="openForm()" id = "button">Report Crime</button>
+	</div>
+		
+	<div class="form-popup" id="myForm">
+		<form action ="javascript:reportFromBrowser(document.getElementById('loc').value,document.getElementById('desc').value)" class="form-container" id = "label" style = "font-family:verdana;">
+		<h1>Report a Crime</h1>
+		
+		<label for="loc" style = "font-family:verdana;" id = "label"><b>Location</b></label>
+		<input type="text" placeholder="Enter Location" name="loc" id="loc" style = "font-family:verdana;" required>
+		
+		<label for="desc" style = "font-family:verdana;" id = "label"><b>Description</b></label>
+		<input type="text" placeholder="Enter Description" name="desc" id="desc" style = "font-family:verdana;" required>
+		
+		<button type="submit" class="btn" style = "font-family:verdana;">Report</button>
+		<button type="button" class="btn cancel" onclick ="closeForm()" style = "font-family:verdana;">Close</button>
+		</form>
+	</div>
+	
+	<script>
+	function openForm() {
+		document.getElementById("myForm").style.display = "block";
+	}
+	
+	function closeForm() {
+		document.getElementById("myForm").style.display = "none";
+	}
+	function reportFromBrowser(address, content){
+		closeForm();
+		var geocoder = new google.maps.Geocoder();
+		geocoder.geocode({'address': address}, function(results, status) {
+          	if (status === 'OK') {
+				var params = {
+						"crimeType": content,
+						"time": getLocalTime(),
+						"latitude": results[0].geometry.location.lat(),
+						"accuracy": "10",
+						"longitude": results[0].geometry.location.lng()
+				};
+				var settings = {
+				  "async": true,
+				  "crossDomain": true,
+				  "url": "https://fcoto8jt9f.execute-api.us-east-1.amazonaws.com/in/hack",
+				  "method": "POST",
+				  "headers": {
+					"Content-Type": "application/json",
+				  },
+				  "processData": false,
+				  "data": JSON.stringify(params)
+				}
+				$.ajax(settings).done(function (response) {
+				  console.log(response);
+				});
+				
+				addMarker(results[0].geometry.location.lat(), results[0].geometry.location.lng(), map, content, getLocalTime());
+          } else {
+            alert('Geocode was not successful for the following reason: ' + status);
+          }
+        });
+	}
+	function getLocalTime(){
+		var time = new Date();
+		var hour = (time.getHours()<10?'0':'')+ time.getHours() + ":" + (time.getMinutes()<10?'0':'') + time.getMinutes() + ":" + (time.getSeconds()<10?'0':'') + time.getSeconds();
+		var weekday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];	
+		var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+		
+		var day = weekday[time.getDay()];
+		var curr_month = months[time.getMonth()];
+		var local = day + " " + curr_month + " " + time.getDate() + " " + time.getFullYear() + " " + hour + " " + "GMT+0000 (UTC)";
+		return local;
+	}
+
+	function themeChange(){
+	  if (document.getElementById("mode").checked == false){
+		dayMode();
+	  } else {
+		nightMode();
+	  }
+	}
+	
+	function dayMode(){
+		map.setMapTypeId('roadmap');
+		document.body.style.backgroundColor = "white";
+		document.getElementById("image").src = "day2.png";
+		document.getElementsByClassName("form-container")[0].style.backgroundColor = "white";
+		document.getElementsByClassName("form-popup")[0].style.border = "3px solid #f1f1f1";
+		document.getElementById("label").style.color = "black";
+	}
+
+	function nightMode(){
+		map.setMapTypeId('night_mode');
+		document.body.style.backgroundColor = "#242f3e";
+		document.getElementById("image").src = "night2.png";
+		document.getElementsByClassName("form-container")[0].style.backgroundColor = "#242f3e";
+		document.getElementsByClassName("form-popup")[0].style.border = "3px solid #000000";
+		document.getElementById("label").style.color = "white";
+	}
+
+	</script>
+	
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	
+    <!--The div element for the map -->
+    <div id="map"></div>
+    <script>
+	// Initialize and add the map
+	var map;
+	function initMap() {
+		// The location of Chicago
+		var chicago = {lat: 41.8837338, lng: -87.6288585};
+		// The map, centered at Chicago
+		map = new google.maps.Map(document.getElementById('map'), {zoom: 13, center: chicago, mapTypeControlOptions: {mapTypeIds: ['roadmap', 'satellite', 'hybrid', 'terrain', 'night_mode']}});
+		
+		var geocoder = new google.maps.Geocoder();
+	
+		var night_mode = new google.maps.StyledMapType(
+		[
+            {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
+            {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
+            {elementType: 'labels.text.fill', stylers: [{color: '#746855'}]},
+            {
+              featureType: 'administrative.locality',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#d59563'}]
+            },
+            {
+              featureType: 'poi',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#d59563'}]
+            },
+            {
+              featureType: 'poi.park',
+              elementType: 'geometry',
+              stylers: [{color: '#263c3f'}]
+            },
+            {
+              featureType: 'poi.park',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#6b9a76'}]
+            },
+            {
+              featureType: 'road',
+              elementType: 'geometry',
+              stylers: [{color: '#38414e'}]
+            },
+            {
+              featureType: 'road',
+              elementType: 'geometry.stroke',
+              stylers: [{color: '#212a37'}]
+            },
+            {
+              featureType: 'road',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#9ca5b3'}]
+            },
+            {
+              featureType: 'road.highway',
+              elementType: 'geometry',
+              stylers: [{color: '#746855'}]
+            },
+            {
+              featureType: 'road.highway',
+              elementType: 'geometry.stroke',
+              stylers: [{color: '#1f2835'}]
+            },
+            {
+              featureType: 'road.highway',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#f3d19c'}]
+            },
+            {
+              featureType: 'transit',
+              elementType: 'geometry',
+              stylers: [{color: '#2f3948'}]
+            },
+            {
+              featureType: 'transit.station',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#d59563'}]
+            },
+            {
+              featureType: 'water',
+              elementType: 'geometry',
+              stylers: [{color: '#17263c'}]
+            },
+            {
+              featureType: 'water',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#515c6d'}]
+            },
+            {
+              featureType: 'water',
+              elementType: 'labels.text.stroke',
+              stylers: [{color: '#17263c'}]
+            }
+          ], {name: ''});
+        map.mapTypes.set('night_mode', night_mode);
+	}
+	</script>
+	<script type="text/javascript">
+	var API_GATE = 'https://fcoto8jt9f.execute-api.us-east-1.amazonaws.com/in/hack';
+	$(document).ready(function(){
+	$.ajax({
+		type: 'GET',
+		url: API_GATE, 
+		
+		success: function(data){
+		//$('#map').html('');
+		//alert(data.Items);
+		data.Items.forEach(function(testtableItem){
+			//alert(typeof(testtableItem.latitude));
+			addMarker(parseFloat(testtableItem.latitude), parseFloat(testtableItem.longitude), map , testtableItem.crimeType, testtableItem.time);
+		});
+	}
+	});
+	}); 
+	</script>
+	<script>
+	
+	function addMarker(lati, longi, map, content, time){
+		var pos = {lat: lati, lng: longi};
+		var infowindow = new google.maps.InfoWindow({
+			content: '<b>Time: </b>' + time + '<br><b>Description: </b>' + content
+		});
+  
+		var marker = new google.maps.Marker({
+				position: pos,
+				icon: {
+					path: google.maps.SymbolPath.CIRCLE,
+					scale: 8,
+					strokeColor: 'black',
+					strokeWeight: 3,
+					fillColor: 'white',
+					fillOpacity: 0.8,
+				},
+				map : map
+			});
+		marker.addListener('click', function() { infowindow.open(map,marker);});
+	}
+    </script>
+	
+    <!--Load the API from the specified URL
+    * The async attribute allows the browser to render the page while the API loads
+    * The key parameter will contain your own API key (which is not needed for this tutorial)
+    * The callback parameter executes the initMap() function -->
+    <script async defer
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDz5JbM2CcCdWLRknygEzEDR0ZiJM7bUVw&callback=initMap">
+    </script>
+  </body>
+</html>
