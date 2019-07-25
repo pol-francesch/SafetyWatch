@@ -217,12 +217,13 @@
 	function getLocalTime(){
 		var time = new Date();
 		var hour = (time.getHours()<10?'0':'')+ time.getHours() + ":" + (time.getMinutes()<10?'0':'') + time.getMinutes() + ":" + (time.getSeconds()<10?'0':'') + time.getSeconds();
-		var weekday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];	
-		var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+		//var weekday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];	
+		//var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 		
-		var day = weekday[time.getDay()];
-		var curr_month = months[time.getMonth()];
-		var local = day + " " + curr_month + " " + time.getDate() + " " + time.getFullYear() + " " + hour + " " + "GMT+0000 (UTC)";
+		//var day = weekday[time.getDay()];
+		//var curr_month = months[time.getMonth()];
+		var local = time.getFullYear() + "-" + (time.getMonth()<10?'0':'') + (time.getMonth()+1) + "-" + (time.getDate()<10?'0':'') + time.getDate() + " " + hour;
+		//var local = day + " " + curr_month + " " + time.getDate() + " " + time.getFullYear() + " " + hour + " " + "GMT+0000 (UTC)";
 		return local;
 	}
 
@@ -369,7 +370,8 @@
 		//alert(data.Items);
 		data.Items.forEach(function(testtableItem){
 			//alert(typeof(testtableItem.latitude));
-			addMarker(parseFloat(testtableItem.latitude), parseFloat(testtableItem.longitude), map , testtableItem.crimeType, testtableItem.time);
+			var updatedTime = testtableItem.time.substring(0,10) + " " + testtableItem.time.substring(11,19);
+			addMarker(parseFloat(testtableItem.latitude), parseFloat(testtableItem.longitude), map , testtableItem.crimeType, updatedTime);
 		});
 	}
 	});
