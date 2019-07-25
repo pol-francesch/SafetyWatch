@@ -74,7 +74,7 @@
 		.switch {
 			position: absolute;
 			top: 50px;
-			display: inline-block;
+			display: inline-flex;
 			width: 50px;
 			height: 25px;
 		}
@@ -97,7 +97,7 @@
 			background-color: #ccc;
 			-webkit-transition: .4s;
 			transition: .4s;
-			display:inline-block;
+			display:inline-flex;
 			margin-top: 0px;
 		}
 
@@ -136,26 +136,43 @@
 			border-radius: 50%;
 		}
 		
-		#rows {
+		#rows{
 			display: flex;
 			flex-direction: row;
 			width: 100%;
+			align-items: center;
+			justify-content: center;
+			align-content: center;
 		}
 		#spacer {
+			-webkit-flex: 1;
+			align-items: center;
+			align-self: center;
+			justify-content: center;
+			-ms-flex: 1;
 			flex: 1;
+		}
+		.spacer img {
+		display: block;
+		float: right;
+		width: 80%;
+		height: auto;
+		margin: auto;
+		min-width: 100px;
+		max-width: 350px;
 		}
     </style>
   </head>
   <body>    
 	<div id = "rows">
+		<span id = "spacer">
 		<label class="switch">
 			<input type = "checkbox" id = "mode" onchange = "themeChange()">
 			<span class = "slider round"></span>
-		</label>
-		<span id = "spacer"></span>
-		<img src="day2.png" alt = "Logo" width = "137" height = "102" style = "padding:3px;" id = "image">
-		<span id = "spacer"></span>
-		<button class="open-button" onclick="openForm()" id = "button">Report Crime</button>
+		</label> </span>
+		<img src="day2.png" alt = "Logo" width = "137" height = "102" style = "padding:3px" id = "image">
+		<span id = "spacer">
+		<button class="open-button" onclick="openForm()" id = "button">Report Crime</button> </span>
 	</div>
 		
 	<div class="form-popup" id="myForm">
