@@ -27,7 +27,7 @@
 	  .form-popup {
 	    display: none;
 		position: fixed;
-		bottom: 84px;
+		top: 91px;
 		right: 15px;
 		border: 3px solid #f1f1f1;
 		z-index: 9;
@@ -351,6 +351,10 @@
             }
           ], {name: ''});
         map.mapTypes.set('night_mode', night_mode);
+		
+		//Making this map big enough
+		var windowHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+		document.getElementById("map").style.height = parseInt(Math.floor(windowHeight * .8)) + "px";
 	}
 	</script>
 	<script type="text/javascript">
@@ -403,7 +407,7 @@
     </script>
 	
 	
-	<p style = "font-family:verdana; color: grey; font-size: 8px;">
+	<p style = "font-family:verdana; color: grey; font-size: 10px;">
 				Disclaimer: SafetyWatch should not be used as an accurate crime reporting web. 
 				It is a crowd-sourced effort to maximize safety in big cities. 
 				Any areas devoid of crime reports do not necessarily signify they are crime free.</p>
